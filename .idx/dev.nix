@@ -9,7 +9,9 @@
     pkgs.python3
   ];
   # Sets environment variables in the workspace
-  env = {};
+  env = {
+    GEMINI_API_KEY = "AIzaSyCORX_d-HXga-Nl-1v7lnUY3RsyWO-EMVg";
+  };
   idx = {
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
