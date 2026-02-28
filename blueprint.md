@@ -1,29 +1,50 @@
-# Lotto Number Generator
+# Blueprint: 유월절 페스티벌 대시보드 (v19 - 최종 수정 계획)
 
-## Overview
+## 1. 개요
 
-This application generates a set of 5 random lottery numbers plus a bonus number. It provides a simple and visually appealing interface for the user to get their lucky numbers.
+"유월절 페스티벌"의 진행 상황을 추적하고 관리하기 위한 인터랙티브 대시보드입니다. `localStorage`를 통해 메인 페이지와 수정 페이지의 데이터가 실시간으로 연동됩니다.
 
-## Project Outline
+## 2. 최종 요청 사항
 
-### Initial Version
+### a. `index.html` (메인 대시보드)
 
-*   **HTML (`index.html`):**
-    *   A clean and modern HTML5 structure.
-    *   A main heading for the application title.
-    *   A button to trigger the number generation.
-    *   A dedicated section to display the generated numbers, including the bonus number.
-*   **CSS (`style.css`):**
-    *   A visually appealing dark theme.
-    *   Modern styling for the layout, button, and number display.
-    *   Use of CSS variables for easy theming.
-    *   Responsive design to ensure the application looks good on different screen sizes.
-*   **JavaScript (`main.js`):**
-    *   A function to generate 6 unique random numbers from 1 to 45.
-    *   The 6th number is designated as the bonus number.
-    *   An event listener on the button to call the generation function.
-    *   The generated numbers are dynamically displayed on the page.
+- **레이아웃:** 3단 구조 (좌: 현황, 중앙: 빙고/점수, 우: 미션).
+- **헤더:** "유월절 페스티벌" 중앙 제목, 좌측 상단에 "수정" 버튼.
+- **좌측 컬럼:**
+    - `오늘 활동 현황`: 단순, 유효, 침례, 출석
+    - `누적 활동 현황`: 단순, 유효, 침례, 출석
+- **중앙 컬럼:**
+    - `누적점수: ____` 표시.
+    - `빙고 미션` 제목 아래 4x4 그리드.
+- **우측 컬럼:**
+    - `미션내용` 제목 아래 16개 미션 리스트.
+    - 각 미션은 `제목`, `달성률`, `진행률 막대`, `+/- 버튼` 포함.
+    - 최하단에 "초기화" 버튼.
 
-## Current Plan
+### b. `edit.html` (수정 페이지)
 
-*   Implement the initial version of the Lotto Number Generator as outlined above.
+- **레이아웃:** 데이터 수정을 위한 폼(Form) 구조.
+- **입력 필드:**
+    1.  **오늘 활동 현황:** 단순, 유효, 침례, 출석
+    2.  **오늘 교육 현황:** 전도, 엘카, 새성도
+    3.  **미션 목록:** 16개 미션 진행률 수정 기능.
+- **버튼:** "저장" 및 "취소" 버튼.
+
+### c. `style.css` (디자인)
+
+- **테마:** 제공된 이미지를 기반으로 한 **핑크색 테마**로 전면 재작성.
+- **스타일:** 이미지와 동일한 폰트, 색상, 배경, 하이라이트 효과 적용.
+
+### d. JavaScript (기능)
+
+- **데이터 연동:** `localStorage`를 통해 모든 데이터(교육 현황 포함)가 두 페이지 간에 완벽히 연동.
+- **초기화 기능:** "초기화" 버튼 클릭 시, **모든 숫자 데이터**를 예외 없이 0으로 리셋하고 화면을 즉시 갱신.
+
+## 3. 작업 계획
+
+1.  **`blueprint.md`를 v19로 업데이트.** (완료)
+2.  **`index.html` 재구성.**
+3.  **`edit.html` 재구성.**
+4.  **`style.css` 재작성.**
+5.  **`edit.js` 재작성.**
+6.  **`main.js` 재작성.**

@@ -1,0 +1,233 @@
+
+/* General Styles */
+body {
+    font-family: sans-serif;
+    background-color: #fff;
+    color: #000;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+/* Header */
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.header h1 {
+    font-size: 3.5rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+.edit-button {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    background-color: #ffc0cb; /* Pink */
+    border: 1px solid #ffc0cb;
+    border-radius: 20px;
+    padding: 8px 30px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    color: #000;
+}
+
+/* Main Content Layout */
+.main-content {
+    display: grid;
+    grid-template-columns: 250px 1fr 1fr; /* Adjusted for better spacing */
+    gap: 40px;
+    align-items: flex-start;
+}
+
+.left-column, .center-column, .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Status Sections (Left Column) */
+.status-section {
+    background-color: #fff0f5; /* Light pink background */
+    padding: 20px;
+}
+
+.status-section h2 {
+    font-size: 1.3rem;
+    font-weight: normal;
+    margin: 0 0 15px 0;
+    text-align: left;
+}
+
+.status-section .item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.item .label {
+    font-weight: bold;
+}
+
+.item .value {
+    background-color: #ffc0cb; /* Pink highlight */
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Center Column: Score and Bingo */
+.cumulative-score-section h2 {
+    font-size: 1.8rem;
+    font-weight: normal;
+    border-bottom: 2px solid #000;
+    padding-bottom: 10px;
+    text-align: left;
+}
+
+.bingo-section h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 20px 0;
+}
+
+.bingo-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.bingo-cell {
+    border: 2px solid #000;
+    background-color: #fff;
+    height: 120px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Right Column: Missions and Reset Button */
+.mission-section h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0 0 20px 0;
+}
+
+#mission-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+#mission-list li {
+    display: grid;
+    grid-template-columns: auto 1fr auto; 
+    align-items: center;
+    gap: 15px;
+}
+
+.mission-details {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.mission-title { font-weight: bold; font-size: 1.1rem; }
+.mission-progress-text { font-size: 1rem; }
+.mission-progress-text span {
+    background-color: #ffc0cb; /* Pink highlight */
+    padding: 3px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.progress-bar-container {
+    height: 30px;
+    background-color: #ffebf0; /* Lighter pink */
+    border-radius: 15px;
+    overflow: hidden;
+    border: 1px solid #ffc0cb;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #ff69b4; /* Hot pink */
+    border-radius: 15px 0 0 15px;
+}
+
+.mission-controls button {
+    background-color: #dde1e6;
+    border: none;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+    font-size: 1.8rem;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.reset-button {
+    align-self: flex-end;
+    background-color: #ff69b4;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 10px 25px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+    .main-content {
+        grid-template-columns: 1fr;
+    }
+
+    .header h1 {
+        order: 0;
+    }
+
+    .cumulative-score-section {
+        order: 1;
+    }
+
+    .left-column {
+        order: 2;
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .center-column {
+        order: 3;
+    }
+    
+    .right-column {
+        order: 4;
+    }
+    
+    #mission-list {
+        grid-template-columns: 1fr;
+    }
+}

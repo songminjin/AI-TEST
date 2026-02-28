@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데이터 수정</title>
+    <style>
+        body { font-family: sans-serif; background-color: #f4f4f4; margin: 20px; }
+        .container { max-width: 1200px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+        
+        /* Header */
+        h1 { text-align: center; }
+        .form-actions { text-align: right; margin-bottom: 20px; }
+        button, a.button-like { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; font-size: 1rem; }
+        button[type='submit'] { background-color: #4CAF50; color: white; }
+        a.button-like { background-color: #f44336; color: white; display: inline-block; }
+
+        /* Main Layout - Desktop */
+        .main-content { display: flex; gap: 30px; }
+        .left-column { flex-basis: 30%; display: flex; flex-direction: column; gap: 20px; }
+        .right-column { flex-basis: 70%; }
+
+        fieldset { border: 1px solid #ccc; border-radius: 4px; padding: 15px; margin: 0; }
+        legend { font-weight: bold; font-size: 1.2em; }
+        .form-group { margin-bottom: 10px; display: flex; align-items: center; }
+        .form-group label { width: 80px; }
+        .form-group input[type='number'] { flex-grow: 1; padding: 5px; }
+        
+        #mission-edit-list { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0;
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 15px;
+        }
+        #mission-edit-list li { display: flex; align-items: center; gap: 10px; }
+        #mission-edit-list label { flex-basis: 60%; }
+        #mission-edit-list input { flex-grow: 1; }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container {
+                display: flex;
+                flex-direction: column;
+            }
+            h1 { order: 0; }
+            .form-actions { 
+                order: 1; 
+                text-align: center;
+                margin-top: 15px;
+                margin-bottom: 20px;
+            }
+            form#edit-form {
+                order: 2;
+            }
+            .main-content { flex-direction: column; }
+            .left-column { 
+                order: 0;
+                flex-direction: row; 
+                justify-content: space-around;
+                gap: 15px;
+            }
+             .left-column fieldset {
+                flex-grow: 1;
+            }
+            .right-column {
+                order: 1;
+            }
+            #mission-edit-list { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>데이터 수정</h1>
+        <div class="form-actions">
+            <button type="submit" form="edit-form">저장</button>
+            <a href="index.html" class="button-like">취소</a>
+        </div>
+        <form id="edit-form">
+            <div class="main-content">
+                <div class="left-column">
+                    <fieldset>
+                        <legend>오늘 활동 현황</legend>
+                        <div class="form-group"><label for="d-soon">단순</label><input type="number" id="d-soon" min="0"></div>
+                        <div class="form-group"><label for="yuhyo">유효</label><input type="number" id="yuhyo" min="0"></div>
+                        <div class="form-group"><label for="chimrye">침례</label><input type="number" id="chimrye" min="0"></div>
+                        <div class="form-group"><label for="chulseok">출석</label><input type="number" id="chulseok" min="0"></div>
+                    </fieldset>
+                    <fieldset>
+                        <legend>오늘 교육 현황</legend>
+                        <div class="form-group"><label for="preaching">전도</label><input type="number" id="preaching" min="0"></div>
+                        <div class="form-group"><label for="elka">엘카</label><input type="number" id="elka" min="0"></div>
+                        <div class="form-group"><label for="saesungdo">새성도</label><input type="number" id="saesungdo" min="0"></div>
+                    </fieldset>
+                </div>
+                <div class="right-column">
+                    <fieldset>
+                        <legend>미션 목록 (진행률)</legend>
+                        <ul id="mission-edit-list"></ul>
+                    </fieldset>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="edit.js"></script>
+</body>
+</html>
