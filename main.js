@@ -1,81 +1,127 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const APP_DATA_KEY = 'dashboardData_v2';
-    let dashboardData;
 
-    // 1. 데이터 구조
-    function getInitialData() {
-        return {
-            status: { 'd-soon': 0, 'yuhyo': 0, 'chimrye': 0, 'chulseok': 0, 'preaching': 0, 'elka': 0, 'saesungdo': 0 },
-            cumulativeStatus: { 'd-soon': 0, 'yuhyo': 0, 'chimrye': 0, 'chulseok': 0 },
-            missions: Array.from({ length: 16 }, (_, i) => ({ id: `mission-${i + 1}`, title: `미션 ${i + 1}`, progress: 0, goal: 10 })),
-            cumulativeScore: 0
-        };
+    const editBtn = document.getElementById('edit-btn');
+    if (editBtn) {
+      editBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'edit.html';
+      });
     }
 
-    // 2. 데이터 불러오기
-    function loadData() {
-        const savedDataString = localStorage.getItem(APP_DATA_KEY);
-        if (savedDataString) {
-            try {
-                const savedData = JSON.parse(savedDataString);
-                if (savedData && savedData.missions && savedData.missions.length === 16) {
-                    dashboardData = savedData;
-                } else { throw new Error("Saved data is corrupted."); }
-            } catch (error) {
-                dashboardData = getInitialData();
+    document.getElementById('reset-btn').addEventListener('click', () => {
+        if (confirm('정말로 모든 데이터를 초기화하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
+            localStorage.removeItem('festivalData');
+            window.location.reload();
+        }
+    });
+
+    const initialData = {
+        activityStatus: { today: { simple: 0, valid: 0, baptism: 0, attendance: 0, online: 0 }, total: { simple: 0, valid: 0, baptism: 0, attendance: 0, online: 0 } },
+        educationStatus: { today: { preaching: 0, elca: 0, newBeliever: 0, onlineEdu: 0 }, total: { preaching: 0, elca: 0, newBeliever: 0, onlineEdu: 0 } },
+        missions: Array.from({ length: 16 }, (_, i) => ({ id: i, title: `미션 내용`, current: 0, goal: 10 })),
+        bingoMissions: Array.from({ length: 16 }, (_, i) => `미션${i + 1}`),
+        bingoCompleted: Array(16).fill(false),
+        letterCount: 0
+    };
+
+    let data = JSON.parse(localStorage.getItem('festivalData')) || JSON.parse(JSON.stringify(initialData));
+    
+    if (!data.educationStatus.total) {
+        data.educationStatus.total = JSON.parse(JSON.stringify(initialData.educationStatus.total));
+    }
+    if (data.missions.length !== 16) {
+        data.missions = initialData.missions;
+    }
+
+    function renderDashboard() {
+        const mainPageElements = document.getElementById('total-score');
+        if (!mainPageElements) return;
+
+        for (const type of ['today', 'total']) {
+            for (const key in data.activityStatus[type]) {
+                const el = document.querySelector(`#${type}-activity-status [data-key="${key}"]`);
+                if (el) el.textContent = `${data.activityStatus[type][key] || 0}명`;
             }
-        } else {
-            dashboardData = getInitialData();
         }
-    }
 
-    // 3. 데이터 저장
-    function saveData() {
-        localStorage.setItem(APP_DATA_KEY, JSON.stringify(dashboardData));
-    }
+        for (const key in data.educationStatus.total) {
+            const el = document.querySelector(`#total-education-status [data-key="${key}"]`);
+            if (el) el.textContent = `${data.educationStatus.total[key] || 0}명`;
+        }
 
-    // 4. 화면 렌더링 함수들 (변경 없음)
-    function renderAll() {
-        renderStatus();
-        renderCumulativeStatus();
-        renderCumulativeScore();
-        renderBingo();
-        renderMissions();
-    }
-    function renderStatus() { Object.keys(dashboardData.status).forEach(id => { const el = document.getElementById(id); if (el) el.textContent = `${dashboardData.status[id] || 0}명`; }); }
-    function renderCumulativeStatus() { Object.keys(dashboardData.cumulativeStatus).forEach(key => { const el = document.getElementById(`cumulative-${key}`); if(el) el.textContent = `${dashboardData.cumulativeStatus[key] || 0}명`; }); }
-    function renderCumulativeScore() { const el = document.getElementById('cumulative-score'); if (el) el.textContent = dashboardData.cumulativeScore || 0; }
-    function renderBingo() { const bingoGrid = document.querySelector('.bingo-grid'); if (!bingoGrid) return; bingoGrid.innerHTML = ''; dashboardData.missions.forEach((mission, i) => { const cell = document.createElement('div'); cell.classList.add('bingo-cell'); cell.textContent = mission ? mission.title : `미션 ${i + 1}`; if (mission && mission.progress >= mission.goal) { cell.style.backgroundColor = '#ff69b4'; cell.style.color = 'white'; } bingoGrid.appendChild(cell); }); }
-    function renderMissions() { const missionList = document.getElementById('mission-list'); if (!missionList) return; missionList.innerHTML = ''; dashboardData.missions.forEach(mission => { const listItem = document.createElement('li'); const progressPct = mission.goal > 0 ? (mission.progress / mission.goal) * 100 : 0; listItem.innerHTML = `<div class="mission-details"><span class="mission-title">${mission.title}</span><span class="mission-progress-text">달성률 <span>${mission.progress}명</span></span></div><div class="progress-bar-container"><div class="progress-bar" style="width: ${progressPct}%"></div></div>`; missionList.appendChild(listItem); }); }
-
-    // 5. 초기화 기능
-    function handleReset() {
-        // 진단을 위해 확인창을 잠시 제거하고, 성공 경고창을 먼저 띄웁니다.
-        alert('성공: handleReset 함수가 실행되었습니다!');
-        dashboardData = getInitialData();
-        saveData();
-        renderAll();
-        alert('모든 데이터가 초기화되었습니다.');
-    }
-
-    // --- 기본 로직 실행 ---
-    loadData();
-    renderAll();
-
-    // --- 최후의 진단 코드 ---
-    // 기존의 버튼 연결 코드를 모두 삭제하고 아래 코드로 대체합니다.
-    document.body.addEventListener('click', function(event) {
-        const target = event.target;
-        const info = `[클릭 진단]
-태그: ${target.tagName}
-ID: ${target.id}
-클래스: ${target.className}`;
+        const bingoGrid = document.getElementById('bingo-grid');
+        if(bingoGrid) {
+            bingoGrid.innerHTML = '';
+            data.bingoMissions.forEach((title, index) => {
+                const cell = document.createElement('div');
+                cell.classList.add('bingo-cell');
+                cell.textContent = title;
+                if (data.bingoCompleted[index]) {
+                    cell.classList.add('completed');
+                }
+                bingoGrid.appendChild(cell);
+            });
+        }
         
-        alert(info);
+        const letterCountEl = document.getElementById('letter-count');
+        if (letterCountEl) letterCountEl.textContent = data.letterCount;
 
-        // 만약 진단 결과 클릭된 것의 ID가 'reset-button'이 맞다면, 초기화 함수를 실행!
-        if (target.id === 'reset-button') {
-            handleReset();
+        const missionList = document.getElementById('mission-list');
+        if (missionList) {
+            missionList.innerHTML = '';
+            data.missions.forEach(mission => {
+                const item = document.createElement('li');
+                item.classList.add('mission-item');
+                const progress = mission.goal > 0 ? (mission.current / mission.goal) * 100 : 0;
+                item.innerHTML = `
+                    <div class="title">${mission.title}</div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" style="width: ${progress}%;"></div>
+                    </div>
+                    <div class="progress-text">${mission.current} / ${mission.goal}</div>
+                `;
+                if (mission.current >= mission.goal) {
+                    item.classList.add('completed');
+                }
+                missionList.appendChild(item);
+            });
         }
-    }, true);
+        
+        calculateAndRenderTotalScore();
+    }
+
+    function calculateBingoLines(completed) {
+        const lines = [
+            [0, 1, 2, 3], [4, 5, 6, 7], [8, 9, 10, 11], [12, 13, 14, 15],
+            [0, 4, 8, 12], [1, 5, 9, 13], [2, 6, 10, 14], [3, 7, 11, 15],
+            [0, 5, 10, 15], [3, 6, 9, 12]
+        ];
+        return lines.reduce((count, line) => count + (line.every(index => completed[index]) ? 1 : 0), 0);
+    }
+
+    function calculateAndRenderTotalScore() {
+        let score = 0;
+        const activityScores = { simple: 5, valid: 50, baptism: 500, attendance: 1000, online: 5 };
+        const educationScores = { preaching: 5, newBeliever: 10, elca: 20, onlineEdu: 0 };
+
+        for (const key in data.activityStatus.total) {
+            score += (data.activityStatus.total[key] || 0) * (activityScores[key] || 0);
+        }
+
+        for (const key in data.educationStatus.total) {
+            score += (data.educationStatus.total[key] || 0) * (educationScores[key] || 0);
+        }
+        
+        score += calculateBingoLines(data.bingoCompleted) * 10;
+        score += (data.letterCount || 0) * 2;
+        
+        // --- BUG FIX: Only add mission score if missions are actually completed ---
+        const completedMissions = data.missions.filter(m => m.current >= m.goal).length;
+        score += completedMissions * 20;
+
+        const totalScoreEl = document.getElementById('total-score');
+        if(totalScoreEl) totalScoreEl.textContent = score;
+    }
+
+    renderDashboard();
 });
